@@ -4,37 +4,37 @@
 #include <list>
 #include <vector>
 #include <functional>
-
 using namespace std;
 
 const int M = 5; //can be changed
 				 //a node in the BTree
+
 template <typename T>
 struct BNode
 {
-	T Key[M - 1];
-	BNode<T> *Son[M];
-	int nsons;
-	int nkeys;
+	T Key[M - 1]; /// array of values --> max = ( M - 1 )
+	BNode<T> *Son[M];  /// pointer to array of structs- sons --> max = ( M )
+	int nsons;         /// num of sons
+	int nkeys;         /// num of values
 
-	BNode();
-	BNode(T x); //initialize as a leaf
+	BNode();           /// deafult ctor --> nKeys=nSons=0 , all M sons in *son[M] equal to NULL
+	BNode(T x); //initialize as a leaf  --> nSons = 2, nKeys = 1 , all M sons in *son[M] equal to NULL
 	void insert(T x, T &upx, BNode<T>*& upt);
-	void deleteVal
-	(T x, bool SearchForSuccessor, T &successorFound, bool& holeSent);
+	void deleteVal(T x, bool SearchForSuccessor, T &successorFound, bool& holeSent);
 	int indexValInK(T x);
-	T*  searchInNode(T& x) {
-		T* tmp = NULL;
-		for (int i = 0; i < nkeys; i++)
-			if (Key[i] == x) tmp = Key + i;
-		return tmp;
-	}
 	int indexValGEQInK(T x);
 	bool sonsUnderMinimum() { return nsons < (int)(M / 2.0 + 0.5); }
 	bool sonsMoreThanMinimum() { return nsons > (int)(M / 2.0 + 0.5); }
 	bool sonsMinimum() {
 		int tmp = (int)(M / 2.0 + 0.5);
 		return nsons <= tmp;
+	}
+	T*  searchInNode(T& x)
+	{
+		T* tmp = NULL;
+		for (int i = 0; i < nkeys; i++)
+			if (Key[i] == x) tmp = Key + i;
+		return tmp;
 	}
 
 private:
@@ -48,11 +48,11 @@ private:
 
 
 template <typename T>
-BNode<T>::BNode()
+BNode<T>::BNode() /// deafult ctor
 {
 	nsons = 0; nkeys = 0;
 	for (int i = 0; i < M; i++)
-		Son[i] = NULL;
+		Son[i] = NULL;  /// all sons are NULL
 }
 
 template <typename T>
@@ -64,6 +64,34 @@ BNode<T>::BNode(T x) //initialize as a leaf
 		Son[i] = NULL;
 }
 
+template <typename T>
+void BNode<T>::insert(T x, T &valup, BNode<T>*& pointup) //returns the left pointer if a split was done, or NULL;
+{
+	T tmp;
+	BNode<T> *tmpp = NULL;
+	pointup = NULL; //no split done here yet.
+	if (Son[0] == NULL) //a leaf
+	{
+		AddValue(x, NULL, valup, pointup);
+	}
+	else
+	{
+		for (int i = 0; i < nkeys; i++)
+		{
+			if (x < Key[i])
+			{
+				Son[i]->insert(x, tmp, tmpp);
+				break;
+			}
+		}
+		if (x >= Key[nkeys - 1])
+			Son[nsons - 1]->insert(x, tmp, tmpp);
+		if (tmpp) //a split was done, with value tmp and pointer tmpp
+		{
+			AddValue(tmp, tmpp, valup, pointup); //add the added value to current level. If required, split.
+		}
+	}
+}
 template <typename T>
 void BNode<T>::AddValue(T x, BNode<T> *pnew, T &upx, BNode<T>*& upt) //add from lower level
 {
@@ -121,37 +149,21 @@ void BNode<T>::AddValue(T x, BNode<T> *pnew, T &upx, BNode<T>*& upt) //add from 
 }
 
 template <typename T>
-void BNode<T>::insert(T x, T &valup, BNode<T>*& pointup) //returns the left pointer if a split was done, or NULL;
+int BNode<T>::indexValInK(T x)
 {
-	T tmp;
-	BNode<T> *tmpp = NULL;
-	pointup = NULL; //no split done here yet.
-	if (Son[0] == NULL) //a leaf
-	{
-		AddValue(x, NULL, valup, pointup);
-	}
-	else
-	{
-		for (int i = 0; i < nkeys; i++)
-		{
-			if (x < Key[i])
-			{
-				Son[i]->insert(x, tmp, tmpp);
-				break;
-			}
-		}
-		if (x >= Key[nkeys - 1])
-			Son[nsons - 1]->insert(x, tmp, tmpp);
-		if (tmpp) //a split was done, with value tmp and pointer tmpp
-		{
-			AddValue(tmp, tmpp, valup, pointup); //add the added value to current level. If required, split.
-
-		}
-	}
-
-
+	for (int i = 0; i < nsons - 1; i++)
+		if (Key[i] == x)
+			return i;
+	return -1;
 }
 
+template <typename T>
+int BNode<T>::indexValGEQInK(T x) //index of value greater or equal to x
+{
+	for (int i = 0; i < nsons - 1; i++)
+		if (Key[i] >= x) return i;
+	return (nsons - 1); //x is larger than all values
+}
 
 template <typename T>void BNode<T>::DeleteFirst(T &val, BNode<T>* &firstSubTree) //delete the first in the node. returns the value deleted and the first SubTree
 {
@@ -280,22 +292,7 @@ void BNode<T>::moveToSubtreeFromBrother(int subTree, int subTreeBrother) //move 
 	brother->nsons--; brother->nkeys--;
 }
 
-template <typename T>
-int BNode<T>::indexValInK(T x)
-{
-	for (int i = 0; i < nsons - 1; i++)
-		if (Key[i] == x)
-			return i;
-	return -1;
-}
 
-template <typename T>
-int BNode<T>::indexValGEQInK(T x) //index of value greater or equal to x
-{
-	for (int i = 0; i < nsons - 1; i++)
-		if (Key[i] >= x) return i;
-	return (nsons - 1); //x is larger than all values
-}
 
 template <typename T>
 void BNode<T>::deleteVal(T x, bool searchForSuccessor, T&successorFound, bool& holeSent)
@@ -433,90 +430,18 @@ void BNode<T>::deleteVal(T x, bool searchForSuccessor, T&successorFound, bool& h
 
 
 
-//*********************************************************************************************
-//*********************************************************************************************
-
-
-template <typename T>
-class BTree
-	//BTree with max degree M
-{
-	BNode<T> *root;
-public:
-	BTree() { root = NULL; } //build an empty tree
-	~BTree() { deleteTree(); }
-	void insert(T x);      //add a value to the tree
-	void deleteVal(T x);
-	void deleteSubTree(BNode<T> *t);
-	void deleteTree() { deleteSubTree(root); }
-	void printSubTree(BNode<T> *t);
-	void printTree() { printSubTree(root); }
-	void printAllKeys(std::function<bool(const T&)> predicate) { printAllKeys(root, predicate); }
-	void printAllKeys(BNode<T> *p, std::function<bool(const T&)>);
-	T* search(T x) { return search(root, x); }
-	T* search(BNode<T> *p, T x);
-};
-
-
-template <typename T>
-T* BTree<T>::search(BNode<T> *p, T x)
-{
-	int i;
-}
-
-
-template <typename T>
-void BTree<T>::printAllKeys(BNode<T> *p, std::function<bool(const T&)> predicate)
-{
-}
-
-template <typename T>
-void BTree<T>::deleteSubTree(BNode<T> *t)
-{
-}
 
 
 
-template <typename T>
-void BTree<T>::printSubTree(BNode<T> *t)
-{
-}
 
 
-template <typename T>
-void BTree<T>::insert(T x) //add a value to the tree
-{
-	BNode<T> *tmp = NULL;
-	T tx;
-	if (root == NULL)
-		root = new BNode<T>(x);
-	else
-	{
-		root->insert(x, tx, tmp);
-		if (tmp) //a split was done;
-		{
-			BNode<T> *newRoot = new BNode<T>(tx);
-			newRoot->Son[0] = root;
-			newRoot->Son[1] = tmp;
-			root = newRoot;
-		}
-	}
 
-}
 
-template <typename T>
-void BTree<T>::deleteVal(T x)
-{
-	T tmp;
-	bool holeSent;
-	if (root == NULL) return;
-	root->deleteVal(x, false, tmp, holeSent); //and if a hole was return, the depth of all leaves reduces in one.
-	if (holeSent == true)
-		if (root->nsons == 1) //the son will be the root
-		{
-			BNode<T> *tmp = root;
-			root = root->Son[0];
-			delete tmp;
-		}
-	//otherwise, the root is allowed to have less than M/2 nodes.
-}
+
+
+
+
+
+
+
+

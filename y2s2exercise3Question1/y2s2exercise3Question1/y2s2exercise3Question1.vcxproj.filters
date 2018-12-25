@@ -18,8 +18,16 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BTR.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Treatment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BTR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StructNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

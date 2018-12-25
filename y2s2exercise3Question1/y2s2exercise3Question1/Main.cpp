@@ -3,7 +3,7 @@
 #include <list>
 #include <vector>
 #include <functional>
-#include "BTR.cpp"
+#include "BTR.h"
 #include "Treatment.h"
 
 using namespace std;
@@ -40,7 +40,7 @@ void main()
 			physicians.push_back(str);
 			break;
 		case '2':cin >> tr;
-			if (std::find(physicians.begin(), physicians.end(), tr.get_physician()) == physicians.end())
+			if (std::find  (physicians.begin(), physicians.end(), tr.get_physician()  ) == physicians.end())
 				cout << "ERROR" << endl;
 			else
 				bt.insert(tr);
