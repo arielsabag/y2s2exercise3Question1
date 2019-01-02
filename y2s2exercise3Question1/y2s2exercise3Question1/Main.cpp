@@ -3,14 +3,15 @@
 #include <list>
 #include <vector>
 #include <functional>
-#include "BTR.h"
+#include "BTree.h"
 #include "Treatment.h"
+#include "BNode.h"
 
 using namespace std;
 
 //=============================================================
 void main()
-{
+{ 
 
 	char ch;
 	BTree<Treatment> bt;
@@ -20,16 +21,17 @@ void main()
 	vector<Treatment> keys;
 	Treatment *p;
 
-	cout << "\nChoose one of the following" << endl;
-	cout << "1: add a new Physician" << endl;
-	cout << "2: add an open date and time for a physician" << endl;
-	cout << "3: add a new Appointment " << endl;
-	cout << "4: print patient calendar " << endl;
-	cout << "5: print physician calendar " << endl;
-	cout << "6: print date reminders" << endl;
-	cout << "7: exit:" << endl;
+	
 	do
 	{
+		cout << "\nChoose one of the following" << endl;
+		cout << "1: add a new Physician" << endl;
+		cout << "2: add an open date and time for a physician" << endl;
+		cout << "3: add a new Appointment " << endl;
+		cout << "4: print patient calendar " << endl;
+		cout << "5: print physician calendar " << endl;
+		cout << "6: print date reminders" << endl;
+		cout << "7: exit:" << endl;
 		cin >> ch;
 
 		switch (ch)
@@ -40,7 +42,7 @@ void main()
 			physicians.push_back(str);
 			break;
 		case '2':cin >> tr;
-			if (std::find  (physicians.begin(), physicians.end(), tr.get_physician()  ) == physicians.end())
+			if (std::find(physicians.begin(), physicians.end(), tr.get_physician()) == physicians.end())
 				cout << "ERROR" << endl;
 			else
 				bt.insert(tr);

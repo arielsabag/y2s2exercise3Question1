@@ -23,10 +23,10 @@
     <ClInclude Include="Treatment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BTR.h">
+    <ClInclude Include="BTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StructNode.h">
+    <ClInclude Include="BNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

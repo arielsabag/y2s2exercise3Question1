@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{4DB66C8B-CFB0-490A-9118-58C8D6616D28}</ProjectGuid>
+    <ProjectGuid>{C546CE2B-8B42-4022-ABBB-A34397E09D7C}</ProjectGuid>
     <RootNamespace>y2s2exercise3Question1</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -118,8 +118,8 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BTR.h" />
-    <ClInclude Include="StructNode.h" />
+    <ClInclude Include="BNode.h" />
+    <ClInclude Include="BTree.h" />
     <ClInclude Include="Treatment.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

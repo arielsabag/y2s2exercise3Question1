@@ -33,12 +33,12 @@ public:
 	bool operator>=(Treatment t);
 	friend istream& operator>>(istream& is, Treatment& t);
 	friend ostream& operator<<(ostream& os, Treatment& t);
-	
+
 private:
 	string physician;
 	string patient;
 	string date;
-	
+
 	int time;
 
 };
@@ -61,8 +61,8 @@ ostream& operator<<(ostream& os, Treatment& t)
 Treatment::Treatment()
 {
 	physician = nullptr;
-	//patient = "";
-	//date = nullptr;
+	patient = nullptr;
+	date = nullptr;
 	time = 0;
 }
 
@@ -115,11 +115,11 @@ void Treatment::UpdateTime(int newTime) // updates time
 
 bool Treatment::operator==(Treatment t) // compere between 2 treatments
 {
-	if (this->get_physician()==t.get_physician())
+	if (this->get_physician() == t.get_physician())
 	{
-		if (this->get_date()==t.get_date())
+		if (this->get_date() == t.get_date())
 		{
-			if (this->get_time()==t.get_time())
+			if (this->get_time() == t.get_time())
 			{
 				return true;
 			}
@@ -130,29 +130,29 @@ bool Treatment::operator==(Treatment t) // compere between 2 treatments
 
 bool Treatment::operator>(Treatment t)
 {
-	if (this->date>t.date)
+	if (this->date > t.date)
 	{
 		return true;
 	}
-	else if (this->date<t.date)
+	else if (this->date < t.date)
 	{
 		return false;
 	}
 	else
 	{
-		if (this->time>t.time)
+		if (this->time > t.time)
 		{
 			return true;
 		}
-		else if ((this->time)<(t.time))
+		else if ((this->time) < (t.time))
 		{
 			return false;
-		}	
+		}
 	}
 }
 bool Treatment::operator<(Treatment t)
 {
-	if (((*this)>t)||((*this)==t))
+	if (((*this) > t) || ((*this) == t))
 	{
 		return false;
 	}

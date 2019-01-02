@@ -4,7 +4,7 @@
 #include <list>
 #include <vector>
 #include <functional>
-#include "StructNode.h"
+#include "BNode.h"
 #include "Treatment.h"
 using namespace std;
 
