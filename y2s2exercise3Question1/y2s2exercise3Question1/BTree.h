@@ -42,6 +42,7 @@ void BTree<T>::insert(T x) //add a value to the tree
 		root = new BNode<T>(x);
 	else
 	{
+		
 		root->insert(x, tx, tmp);
 		if (tmp) //a split was done;
 		{
@@ -93,8 +94,30 @@ void BTree<T>::deleteSubTree(BNode<T> *t)
 
 template <typename T>
 void BTree<T>::printAllKeys(BNode<T> *p, std::function<bool(const T&)> predicate)
-{
+{	
+	// Function to traverse all nodes in a subtree rooted with this node 
+		// There are n keys and n+1 children, travers through n keys 
+		// and first n children 
+	if (!p)
+	{
+		return;
+	}
+		int i;
+		for (i = 0; i < (*p).nkeys; i++)
+		{
+			// If this is not leaf, then before printing key[i], 
+			// traverse the subtree rooted with child C[i]. 
+			if (((*p).nsons != 0)&&((*p).Son[i]!=NULL))
+				printAllKeys((*p).Son[i], predicate);
+			if (predicate((*p).Key[i]))
+			{
+				cout << " " << (*p).Key[i];
+			}
+		}
 
+		// Print the subtree rooted with last child 
+		if (((*p).nsons != 0) && ((*p).Son[i] != NULL))
+			printAllKeys((*p).Son[i], predicate);
 }
 
 template <typename T>
@@ -141,15 +164,3 @@ void BTree<T>::printSubTree(BNode<T> *t)
 			cout << t->Key[i] << endl;
 	}
 }
-
-//// inOrder processing of tree rooted at current
-//template <class T>
-//void BTree<T>::inOrder(BNode<T> * current)
-//{
-//	if (current)
-//	{
-//		inOrder(current->left);
-//		process(current->value);
-//		inOrder(current->right);
-//	}
-//}
